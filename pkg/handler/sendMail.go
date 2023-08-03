@@ -18,10 +18,10 @@ func SendMail(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResp
 	var reqBody domain.Request
 	err := json.Unmarshal([]byte(request.Body), &reqBody)
 	if err != nil {
-		log.Println("Error al analizar el cuerpo de la solicitud:", err.Error())
+		log.Println("Error parsing request body:", err.Error())
 		return events.APIGatewayProxyResponse{
-			Body:       "Error al analizar el cuerpo de la solicitud",
-			StatusCode: 500,
+			Body:       "bad request",
+			StatusCode: 400,
 		}, nil
 	}
 
@@ -31,7 +31,7 @@ func SendMail(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResp
 
 	if Response.Status != 200 {
 		return events.APIGatewayProxyResponse{
-			Body:       "Error al obtener los datos",
+			Body:       "Error getting the data",
 			StatusCode: 500,
 		}, nil
 	}
@@ -65,8 +65,17 @@ func SendMail(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResp
 
 	wg.Wait()
 
+var message string
+  
+	if reqBody.Emails==""{
+		message="Email sent successfully to the user with their transaction history."
+	}else{
+		message="Email sent successfully to all users with their corresponding transaction history."
+	}
+
+
 	return events.APIGatewayProxyResponse{
-		Body:       "Correo enviado correctamente",
+		Body:       message,
 		StatusCode: 200,
 	}, nil
 
