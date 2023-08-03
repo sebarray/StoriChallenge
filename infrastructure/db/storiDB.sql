@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla heroku_97c81d6e787e777.transactions: ~5 rows (aproximadamente)
-INSERT IGNORE INTO `transactions` (`ID`, `AMOUNT`, `DATE`, `USER_ID`) VALUES
+INSERT INTO `transactions` (`ID`, `AMOUNT`, `DATE`, `USER_ID`) VALUES
 	(1, 40, '2023-07-30', 'dc2e420c-2f38-11ee-8124-0242ac1101b5'),
 	(2, -30, '2023-07-30', 'dc2e420c-2f38-11ee-8124-0242ac1101b5'),
 	(3, 60, '2023-06-30', 'dc2e420c-2f38-11ee-8124-0242ac1101b5'),
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla heroku_97c81d6e787e777.user: ~2 rows (aproximadamente)
-INSERT IGNORE INTO `user` (`ID`, `EMAIL`, `NAME`, `LAST_NAME`, `PASSWORD`) VALUES
+INSERT INTO `user` (`ID`, `EMAIL`, `NAME`, `LAST_NAME`, `PASSWORD`) VALUES
 	('dc2e420c-2f38-11ee-8124-0242ac1101b4', 'sebarray98@gmail.com', 'sebastian', 'de mello', 'DASDDDDDDDDDDDDDDDDDDDDA'),
 	('dc2e420c-2f38-11ee-8124-0242ac1101b5', 's.wiselink@gmail.com', 'wiselink', 'w', 'DDDDASSSSSSSDDDDDDDDDDDDDDDD');
 
@@ -63,7 +63,7 @@ BEGIN
 
 
 
-  IF userID = "" THEN
+  IF email_param = "" THEN
     SELECT
       us.EMAIL,
       CONCAT(
@@ -95,7 +95,7 @@ BEGIN
     ORDER BY
       us.EMAIL;
       
- ELSEIF userID!= "" then 
+ ELSEIF email_param!= "" then 
   
   
   
