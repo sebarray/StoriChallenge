@@ -65,14 +65,13 @@ func SendMail(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResp
 
 	wg.Wait()
 
-var message string
-  
-	if reqBody.Emails==""{
-		message="Email sent successfully to the user with their transaction history."
-	}else{
-		message="Email sent successfully to all users with their corresponding transaction history."
-	}
+	var message string
 
+	if reqBody.Emails == "" {
+		message = "Email sent successfully to all users with their corresponding transaction history."
+	} else {
+		message = "Email sent successfully to the user with their transaction history."
+	}
 
 	return events.APIGatewayProxyResponse{
 		Body:       message,
