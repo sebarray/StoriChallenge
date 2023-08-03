@@ -40,7 +40,7 @@ func (q Query) ReadTransaction( email string ) ([]domain.Mail, domain.Response) 
 
 		err = json.Unmarshal([]byte(txns), &mail.Transaction)
 	if err != nil {
-		log.Println("Error al parsear el JSON:", err)
+		log.Println("Error parsing the JSON:", err)
 		return nil, domain.Response{Status:500, Message: "scan error"}
 	}
 

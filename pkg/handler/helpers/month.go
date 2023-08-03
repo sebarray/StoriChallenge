@@ -18,21 +18,20 @@ func CountTransactionsPerMonth(transactions []domain.Transaction) string {
 			continue
 		}
 
-		// Obtener el nombre del mes en lugar del formato "YYYY-MM"
+	
 
 		monthNumber := date.Month()
 
-		// Concatenar el nombre del mes con el número del mes
 		month :=  monthNumber.String()
 
-		// Incrementar el contador para el mes correspondiente
+		
 		counts[month]++
 	}
 
-	// Crear un slice de objetos Month
+	
 	months := make([]domain.Month, 0)
 
-	// Recorrer los resultados y crear objetos Month
+
 	for month, count := range counts {
 		months = append(months, domain.Month{Count: count, Name: month})
 	}
