@@ -6,13 +6,14 @@ import (
 	// "encoding/json"
 	// "fmt"
 
-	"storie/pkg/handler"
+	"storie/infrastructure/api/controller"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func Start() {
+	controller := controller.GetProvider()
 
 	log.Println("Starting application")
-	lambda.Start(handler.SendMail)
+	lambda.Start(controller.SendMail)
 }
