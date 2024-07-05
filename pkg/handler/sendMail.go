@@ -1,13 +1,9 @@
 package handler
 
 import (
-	"log"
-	"storie/infrastructure/db/storageFile"
 	"storie/infrastructure/db/transactionsRepository"
 
-	"storie/infrastructure/service"
 	"storie/pkg/domain"
-	"sync"
 )
 
 type IHandler interface {
@@ -28,43 +24,40 @@ func (h *Handler) SendMail(reqBody domain.Request) domain.Response {
 	txns, Response := repoTxn.ReadTransaction(reqBody.Emails)
 
 	if Response.Status != 200 {
-		Response.Message = "Error getting the data"
-		return Response
+		return domain.Response{
+			Message: "Error getting the data",
+			Status:  500,
+		}
 	}
-	gmail := service.GetProvider("gmail")
-	storage := storageFile.GetProvider("s3")
-	var wg sync.WaitGroup
-
-	for _, txn := range txns {
-
-		wg.Add(1)
-
-		go func(txn domain.Mail) {
-			defer wg.Done()
-
-			var err error
-			txn.Link, err = storage.UploadTransactions(txn.Transaction, txn.SenderEmail)
-			if err != nil {
-				log.Println(err.Error())
-
-				return
-			}
-			err = gmail.Send(txn)
-			if err != nil {
-				log.Println(err.Error())
-
-				return
-			}
-		}(txn)
+	CountTxn := len(txns)
+	for i := 0; i < 3; i++ {
+		txns = ServiceWokerTxns(txns)
+		if len(txns) == 0 {
+			break
+		}
 	}
 
-	wg.Wait()
+	if CountTxn == len(txns) {
+		return domain.Response{
+			Message: "Error sending the email",
+			Status:  500,
+		}
+	}
+
+	var message string
 
 	if reqBody.Emails == "" {
-		Response.Message = "Email sent successfully to all users with their corresponding transaction history."
+		message = "Email sent successfully to the user with their transaction history."
 	} else {
-		Response.Message = "Email sent successfully to the user with their transaction history."
+		message = "Email sent successfully to all users with their corresponding transaction history."
+	}
+	if CountTxn > len(txns) {
+		message = "Email sent successfully to the user with their transaction history. Error sending the email to some users."
+		//implementar logica para  manejar las transacciones que no se pudieron enviar
 	}
 
-	return Response
+	return domain.Response{
+		Message: message,
+		Status:  200,
+	}
 }
